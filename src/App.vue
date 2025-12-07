@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from "vue";
+import TodoList from "./components/TodoList.vue";
 
 const str=ref("");
 const list=ref([
@@ -7,6 +8,7 @@ const list=ref([
     {text:"睡觉",isCompleted:true},
     {text:"打代码",isCompleted:false},
 ]);
+
 function add(){
     const inputValue = str.value.trim();//去除输入框内容的「首尾空格」（比如用户只按了空格，也判定为空）
     if (!inputValue) { // 为空则直接返回，不执行后续操作
@@ -30,40 +32,12 @@ function del(index){
             <input v-model="str" type="text" class="todo-input" placeholder="add a todo"/><!-- 提示文字 -->
             <div @click="add" class="todo-button">add todo</div>
         </div>
-
-        <div v-for="(item,index) in list" :key="index" :class="item.isCompleted ? 'item completed' : 'item'">
-            <div>
-                <input v-model="item.isCompleted" type="checkbox"/>
-                <span class="name">{{item.text}}</span>
-            </div>
-            <div @click="del(index)" class="del">del</div>
-        </div>
+        <TodoList :todos="list" @delete="del"></TodoList><!-- :告诉 Vue“这是一个动态绑定，右边是变量”； -->
+        
     </div>
 </template>
 
 <style scoped>
-    .del{
-        cursor: pointer;/* 鼠标变手指 */
-        user-select: none;/* 禁止选中文字 */
-        color: red;
-    }
-    .completed{
-        text-decoration: line-through;
-        opacity: 0.4;
-        user-select: none;/* 禁止选中文字 */
-    }
-    .item{
-        display:flex;/* 弹性盒子模型 */
-        align-items: center;/* 水平居中 */
-        justify-content: space-between;/* 左右两端对齐 */
-        width: 80%;
-        height: 50px;
-        margin: 15px auto;/* 上下外边距15px，左右自动，由于上面的盒子margin-bottom: 20px，只有大于20px第一个盒子才会下移 */
-        padding: 16px;
-        box-sizing: border-box;
-        border-radius: 20px;
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 20px;
-    }
     .todo-button{
         width: 100px;
         height: 50px;
